@@ -21,11 +21,10 @@
             <div class="header-actions">
                 <a href="/info" class="btn btn-info-link"><i class="fas fa-info-circle"></i> About Heavy Metals</a>
                 <div class="user-actions">
-                    <div class="user-auth">
-                        <button id="login-btn" class="btn btn-secondary-outline">Login</button>
-                        <button id="signup-btn" class="btn btn-primary">Sign Up</button>
-                    </div>
-                    <i id="account-icon" class="fas fa-user-circle account-icon hidden" title="My Account"></i>
+                    <img src="{{ url_for('static', filename='images/user.png') }}" alt="User Profile"
+                        class="user-profile-icon">
+                    <button id="login-btn" class="btn btn-secondary-outline">Login</button>
+                    <button id="signup-btn" class="btn btn-primary">Sign Up</button>
                 </div>
             </div>
         </div>

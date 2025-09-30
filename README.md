@@ -69,3 +69,15 @@ Front-end: HTML, CSS, JS
 Back-end: Python (Pandas, Numpy, Flask)
 
 Map: GeoPandas and Folium
+
+ Create virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+ Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+python app.py

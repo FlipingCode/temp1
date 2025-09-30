@@ -30,8 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Account UI Elements
     const loginBtn = document.getElementById('login-btn');
     const signupBtn = document.getElementById('signup-btn');
-    const accountIcon = document.getElementById('account-icon');
-    const userAuth = document.querySelector('.user-auth');
 
     // --- INITIALIZATION ---
     setCurrentDate();
@@ -55,12 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mock Auth Listeners
     loginBtn.addEventListener('click', () => alert('Login functionality is not yet implemented.'));
-    signupBtn.addEventListener('click', () => {
-        alert('Sign-up functionality is not yet implemented. This is a UI demonstration.');
-        userAuth.classList.add('hidden');
-        accountIcon.classList.remove('hidden');
-    });
-    accountIcon.addEventListener('click', () => alert('Account profile is not yet implemented.'));
+    signupBtn.addEventListener('click', () => alert('Sign-up functionality is not yet implemented.'));
 
     tabLinks.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -213,7 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const dd = String(today.getDate()).padStart(2, '0');
-        reportDateInput.value = `${yyyy}-${mm}-${dd}`;
+        if (reportDateInput) {
+            reportDateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
     }
 
     function renderTable(data) {

@@ -29,11 +29,9 @@
       <div class="header-actions">
         <a href="/info" class="btn btn-info-link"><i class="fas fa-info-circle"></i> About Heavy Metals</a>
         <div class="user-actions">
-          <div class="user-auth">
-            <button id="login-btn" class="btn btn-secondary-outline">Login</button>
-            <button id="signup-btn" class="btn btn-primary">Sign Up</button>
-          </div>
-          <i id="account-icon" class="fas fa-user-circle account-icon hidden" title="My Account"></i>
+          <img src="{{ url_for('static', filename='images/user.png') }}" alt="User Profile" class="user-profile-icon">
+          <button id="login-btn" class="btn btn-secondary-outline">Login</button>
+          <button id="signup-btn" class="btn btn-primary">Sign Up</button>
         </div>
       </div>
     </div>
@@ -102,6 +100,34 @@
               <h3>Groundwater Quality Distribution</h3>
               <img src="{{ url_for('static', filename='images/graphs/graph_2.png') }}"
                 alt="Groundwater Quality Distribution Graph">
+            </div>
+            <div class="graph-item">
+              <h3>HMPI Values by Sample</h3>
+              <img src="{{ url_for('static', filename='images/graphs/graph_3.png') }}"
+                alt="HMPI Values by Sample Graph">
+            </div>
+            <div class="graph-item">
+              <h3>Heavy Metal Concentrations (As, Cd, Cr)</h3>
+              <img src="{{ url_for('static', filename='images/graphs/graph_4.png') }}"
+                alt="Heavy Metal Concentrations Graph">
+            </div>
+            <div class="graph-item">
+              <h3>Heavy Metal Concentration Distributions</h3>
+              <img src="{{ url_for('static', filename='images/graphs/graph_5.png') }}"
+                alt="Heavy Metal Concentration Distributions Graph">
+            </div>
+            <div class="graph-item">
+              <h3>Heavy Metals and HMPI Correlation Matrix</h3>
+              <img src="{{ url_for('static', filename='images/graphs/graph_6.png') }}" alt="Correlation Matrix Graph">
+            </div>
+            <div class="graph-item">
+              <h3>PCA Analysis of Heavy Metals (PC1: 69.3% variance, PC2: 8.6% variance)</h3>
+              <img src="{{ url_for('static', filename='images/graphs/graph_7.png') }}" alt="PCA Analysis Graph">
+            </div>
+            <div class="graph-item">
+              <h3>Top 10 Most Contaminated Samples</h3>
+              <img src="{{ url_for('static', filename='images/graphs/graph_8.png') }}"
+                alt="Top 10 Contaminated Samples Graph">
             </div>
           </div>
         </div>
