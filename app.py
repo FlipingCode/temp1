@@ -30,12 +30,19 @@ geospatial = GeoSpatialAnalyser()
     
 # Home Page
 @app.route('/')
-def index():
-    return render_template('index.html')
-    # Add this new route to the end of your app.py file
+def home():
+    return render_template('home.html')
+
+# Analyzer Page
+@app.route('/analyzer')
+def analyzer():
+    return render_template('analyzer.html')
+
+# Info Page
 @app.route('/info')
 def info():
     return render_template('info.html')
+
 # Upload
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -108,15 +115,6 @@ def generate_map():
         df.to_pickle(session['df_cache'])
         print("HMPI column calculated automatically.")
 
-    # print("Running Geospatial Analysis Module")
-    # if processor.coordinates_check(df):
-    #     html_path = geospatial.geospatial_analysis(df)
-    #     # return the HTML content as text
-    #     with open(html_path, 'r', encoding='utf-8') as f:
-    #         return f.read()
-    # else:
-    #     return "No coordinates found in data.", 400
-
     print("Running Geospatial Analysis Module")
     if processor.coordinates_check(df):
         map_html = geospatial.geospatial_analysis(df)
@@ -127,3 +125,6 @@ def generate_map():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+ # On Windows: venv\Scripts\activate
+ # python app.py

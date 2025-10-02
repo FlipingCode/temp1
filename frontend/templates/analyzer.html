@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JalSuchak - HMPI Analysis Tool</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/small_app_logo.png') }}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/small_app_logo.png') }}" alt="JalSuchak Logo">
+                <h1>JalSuchak</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/analyzer" class="nav-link active">Analyzer</a>
+                <a href="/info" class="nav-link">About Heavy Metals</a>
+            </nav>
+            <div class="header-actions">
+                <div class="user-actions">
+                    <img src="{{ url_for('static', filename='images/user.png') }}" alt="User Profile"
+                        class="user-profile-icon">
+                    <button id="login-btn" class="btn btn-secondary-outline">Login</button>
+                    <button id="signup-btn" class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="upload-view">
+            <div class="hero-section">
+                <h2>Automated Heavy Metal Pollution Index Analysis</h2>
+                <p>Upload your groundwater data (CSV or Excel) to instantly calculate HMPI values and visualize
+                    pollution
+                    hotspots on an interactive map.</p>
+            </div>
+
+            <div id="upload-card" class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-upload"></i> Upload Your Data File</h3>
+                </div>
+                <div class="card-body">
+                    <div id="drop-zone">
+                        <input type="file" id="fileInput" accept=".csv, .xlsx, .xls" hidden />
+                        <i class="fas fa-cloud-upload-alt drop-icon"></i>
+                        <p><b>Drag & drop your file here</b> or click to select a file.</p>
+                        <p class="file-info" id="file-info-text">Supported formats: CSV, XLSX, XLS</p>
+                    </div>
+                    <div class="button-group">
+                        <button id="process-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-cogs"></i> Upload & Analyze
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results-view" class="hidden">
+            <div class="results-header">
+                <h2>Analysis Results</h2>
+                <div class="button-group">
+                    <button id="download-csv-btn" class="btn btn-success"><i class="fas fa-file-csv"></i> Download
+                        CSV</button>
+                    <button id="download-pdf-btn" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Download Table
+                        PDF</button>
+                    <button id="reset-btn" class="btn btn-secondary"><i class="fas fa-redo"></i> New Analysis</button>
+                </div>
+            </div>
+
+            <div id="results-card" class="card">
+                <div class="card-tabs">
+                    <button class="tab-link active" data-tab="table-tab"><i class="fas fa-table"></i> Data
+                        Table</button>
+                    <button class="tab-link" data-tab="dashboard-tab"><i class="fas fa-chart-bar"></i> Graph
+                        Dashboard</button>
+                    <button class="tab-link" data-tab="map-tab" id="map-tab-btn" disabled><i
+                            class="fas fa-map-marked-alt"></i>
+                        Geospatial Map</button>
+                    <button class="tab-link" data-tab="report-tab"><i class="fas fa-file-alt"></i> Generate
+                        Report</button>
+                </div>
+
+                <div id="table-tab" class="tab-content active">
+                    <p id="status-message" class="status-message"></p>
+                    <div id="preview-table" class="table-container"></div>
+                </div>
+
+                <div id="dashboard-tab" class="tab-content">
+                    <div class="graph-container">
+                        <div class="graph-item">
+                            <h3>Heavy Metal Pollution Index (HMPI) Distribution</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_1.png') }}"
+                                alt="HMPI Distribution Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>Groundwater Quality Distribution</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_2.png') }}"
+                                alt="Groundwater Quality Distribution Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>HMPI Values by Sample</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_3.png') }}"
+                                alt="HMPI Values by Sample Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>Heavy Metal Concentrations (As, Cd, Cr)</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_4.png') }}"
+                                alt="Heavy Metal Concentrations Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>Heavy Metal Concentration Distributions</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_5.png') }}"
+                                alt="Heavy Metal Concentration Distributions Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>Heavy Metals and HMPI Correlation Matrix</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_6.png') }}"
+                                alt="Correlation Matrix Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>PCA Analysis of Heavy Metals (PC1: 69.3% variance, PC2: 8.6% variance)</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_7.png') }}"
+                                alt="PCA Analysis Graph">
+                        </div>
+                        <div class="graph-item">
+                            <h3>Top 10 Most Contaminated Samples</h3>
+                            <img src="{{ url_for('static', filename='images/graphs/graph_8.png') }}"
+                                alt="Top 10 Contaminated Samples Graph">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="map-tab" class="tab-content">
+                    <div id="map-container"></div>
+                </div>
+
+                <div id="report-tab" class="tab-content">
+                    <h3 class="report-title">Report Generation Module</h3>
+                    <div class="report-form-grid">
+                        <div class="form-group">
+                            <label for="report-title">Report Title</label>
+                            <input type="text" id="report-title" value="Heavy Metal Pollution Assessment Report">
+                        </div>
+                        <div class="form-group">
+                            <label for="report-date">Report Date</label>
+                            <input type="date" id="report-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="report-org">Organization</label>
+                            <input type="text" id="report-org" value="Environmental Monitoring Agency">
+                        </div>
+                        <div class="form-group checkbox-group-vertical">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="include-maps" checked>
+                                <label for="include-maps">Include Geospatial Maps</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="include-recs" checked>
+                                <label for="include-recs">Include Recommendations</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="report-author">Report Author</label>
+                            <input type="text" id="report-author" value="Data Analyst">
+                        </div>
+                    </div>
+                    <div class="report-sections">
+                        <h4>Select Report Sections</h4>
+                        <div class="checkbox-group-horizontal">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="section-exec" checked><label for="section-exec">Executive
+                                    Summary</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="section-results" checked><label for="section-results">Results
+                                    Analysis</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="section-quality" checked><label for="section-quality">Quality
+                                    Assessment</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="section-conc" checked><label
+                                    for="section-conc">Conclusions</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group" style="justify-content: flex-start; margin-top: 2rem;">
+                        <button id="generate-report-btn" class="btn btn-danger"><i class="fas fa-file-download"></i>
+                            Generate
+                            Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-spinner" class="spinner-overlay hidden">
+            <div class="spinner"></div>
+            <p id="spinner-text">Processing...</p>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2025 JalSuchak HMPI Analysis Tool. All Rights Reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

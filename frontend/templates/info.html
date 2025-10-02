@@ -2,12 +2,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About Heavy Metals - JalSuchak</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/small_app_logo.png') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 
 <body>
@@ -17,9 +22,12 @@
                 <img src="{{ url_for('static', filename='images/small_app_logo.png') }}" alt="JalSuchak Logo">
                 <h1>JalSuchak</h1>
             </div>
-
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/analyzer" class="nav-link">Analyzer</a>
+                <a href="/info" class="nav-link active">About Heavy Metals</a>
+            </nav>
             <div class="header-actions">
-                <a href="/info" class="btn btn-info-link"><i class="fas fa-info-circle"></i> About Heavy Metals</a>
                 <div class="user-actions">
                     <img src="{{ url_for('static', filename='images/user.png') }}" alt="User Profile"
                         class="user-profile-icon">
@@ -32,9 +40,8 @@
 
     <main class="container">
         <div class="info-page-header">
-            <h2>Heavy Metals in Water: Risks & Solutions</h2>
-            <p>Understanding the impact of heavy metal contamination is the first step towards ensuring safe drinking
-                water. Below are details on common contaminants.</p>
+            <h2>Understanding Heavy Metals</h2>
+            <p>Learn about common heavy metals, their sources, and their impact on health and the environment.</p>
         </div>
 
         <div class="metal-info-container">
@@ -43,26 +50,11 @@
                     <h3>Arsenic (As)</h3>
                 </div>
                 <div class="metal-card-body">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Health Effects</h4>
-                    <p>Long-term exposure to arsenic from drinking water can cause cancer (skin, bladder, lung), skin
-                        lesions, and has been associated with cardiovascular disease and diabetes.</p>
-                    <h4><i class="fas fa-shield-alt"></i> Mitigation Strategies</h4>
-                    <p>Reverse osmosis, activated alumina filters, and ion exchange systems are effective at removing
-                        arsenic from water at the household or community level.</p>
-                </div>
-            </div>
-
-            <div class="metal-card">
-                <div class="metal-card-header">
-                    <h3>Lead (Pb)</h3>
-                </div>
-                <div class="metal-card-body">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Health Effects</h4>
-                    <p>Lead is highly toxic, especially to children. It can cause severe damage to the brain and nervous
-                        system, leading to learning disabilities, behavioral problems, and lowered IQ.</p>
-                    <h4><i class="fas fa-shield-alt"></i> Mitigation Strategies</h4>
-                    <p>Replacing old lead pipes and plumbing fixtures is the most permanent solution. Point-of-use water
-                        filters certified for lead removal are also effective.</p>
+                    <h4><i class="fas fa-exclamation-triangle"></i> Health Impacts</h4>
+                    <p>Long-term exposure can lead to skin lesions, cancer, and developmental effects. It primarily
+                        affects the skin, nervous system, and respiratory system.</p>
+                    <h4><i class="fas fa-industry"></i> Common Sources</h4>
+                    <p>Natural deposits, industrial waste, agricultural pesticides, and contaminated water.</p>
                 </div>
             </div>
 
@@ -71,12 +63,24 @@
                     <h3>Cadmium (Cd)</h3>
                 </div>
                 <div class="metal-card-body">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Health Effects</h4>
-                    <p>Cadmium exposure can lead to kidney damage, fragile bones (Itai-Itai disease), and is classified
-                        as a human carcinogen.</p>
-                    <h4><i class="fas fa-shield-alt"></i> Mitigation Strategies</h4>
-                    <p>Effective removal methods include reverse osmosis, ion exchange, and lime softening. Preventing
-                        industrial discharge is key to source control.</p>
+                    <h4><i class="fas fa-exclamation-triangle"></i> Health Impacts</h4>
+                    <p>Can cause kidney damage, bone problems, and is a known carcinogen. Food and cigarette smoke are
+                        major sources of exposure.</p>
+                    <h4><i class="fas fa-industry"></i> Common Sources</h4>
+                    <p>Industrial processes, batteries, pigments, and phosphate fertilizers.</p>
+                </div>
+            </div>
+
+            <div class="metal-card">
+                <div class="metal-card-header">
+                    <h3>Lead (Pb)</h3>
+                </div>
+                <div class="metal-card-body">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Health Impacts</h4>
+                    <p>Highly toxic, especially to children. It can cause neurological damage, developmental delays, and
+                        kidney problems.</p>
+                    <h4><i class="fas fa-industry"></i> Common Sources</h4>
+                    <p>Old pipes, paints, industrial emissions, and batteries.</p>
                 </div>
             </div>
 
@@ -85,14 +89,25 @@
                     <h3>Mercury (Hg)</h3>
                 </div>
                 <div class="metal-card-body">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Health Effects</h4>
-                    <p>Mercury is a potent neurotoxin. Exposure can cause tremors, memory loss, and damage to the
-                        kidneys and central nervous system. It is particularly harmful to fetal development.</p>
-                    <h4><i class="fas fa-shield-alt"></i> Mitigation Strategies</h4>
-                    <p>Granular activated carbon (GAC) filters and reverse osmosis can remove mercury. Reducing
-                        emissions from coal-fired power plants and mining is crucial for prevention.</p>
+                    <h4><i class="fas fa-exclamation-triangle"></i> Health Impacts</h4>
+                    <p>Affects the nervous, digestive, and immune systems. Can be fatal.</p>
+                    <h4><i class="fas fa-industry"></i> Common Sources</h4>
+                    <p>Mining, coal-burning power plants, and some industrial processes.</p>
                 </div>
             </div>
+
+            <div class="metal-card">
+                <div class="metal-card-header">
+                    <h3>Chromium (Cr)</h3>
+                </div>
+                <div class="metal-card-body">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Health Impacts</h4>
+                    <p>Hexavalent chromium (Cr-VI) is carcinogenic and can cause respiratory problems.</p>
+                    <h4><i class="fas fa-industry"></i> Common Sources</h4>
+                    <p>Industrial processes like chrome plating, tanning, and pigment production.</p>
+                </div>
+            </div>
+
         </div>
     </main>
 
