@@ -28,6 +28,7 @@ class HMPICalculation:
     def calculate(self, df):
         hmpi_list = []
         poll_list=[]
+        poll_color_list = []
 
         for index, row in df.iterrows():
             num = 0
@@ -50,20 +51,31 @@ class HMPICalculation:
             hmpi_list.append(hmpi)
 
             poll_level='Perfect'
-            if(hmpi<=10): 
-                poll_level='Perfect'
-            elif(hmpi<=50): 
-                poll_level= 'Good'
-            elif(hmpi<=100): 
-                poll_level= 'Moderate'
-            elif(hmpi<=200): 
-                poll_level= 'Poor'
-            elif(hmpi<=400): 
-                poll_level= 'Very Poor'
-            else: 
-                poll_level= 'Extremely Poor'
+            poll_color = '#28a745'  # Default to green for 'Perfect'
+
+            if hmpi <= 10:
+                poll_level = 'Perfect'
+                poll_color = '#28a745'
+            elif hmpi <= 50:
+                poll_level = 'Good'
+                poll_color = '#28a745'
+            elif hmpi <= 100:
+                poll_level = 'Moderate'
+                poll_color = '#ffc107'
+            elif hmpi <= 200:
+                poll_level = 'Poor'
+                poll_color = '#fd7e14'
+            elif hmpi <= 400:
+                poll_level = 'Very Poor'
+                poll_color = '#dc3545'
+            else:
+                poll_level = 'Extremely Poor'
+                poll_color = '#8b0000'
+            
             poll_list.append(poll_level)
+            poll_color_list.append(poll_color)
 
         df['HMPI'] = hmpi_list
-        df['Pollution Level']=poll_list
+        df['Pollution Level'] = poll_list
+        df['Pollution_Color'] = poll_color_list
         return df
