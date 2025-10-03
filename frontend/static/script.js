@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    // --- Start of Date Pre-fill ---
+    const reportDateInput = document.getElementById('report-date');
+    if (reportDateInput) {
+        // Format date as YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0];
+        reportDateInput.value = today;
+    }
+    // --- End of Date Pre-fill ---
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('fileInput');
     const fileInfoText = document.getElementById('file-info-text');
@@ -75,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 mapTabBtn.title = "Map not available: Your data must contain 'Latitude' and 'Longitude' columns.";
             }
 
-            statusMessage.textContent = `${uploadData.rows} rows of data uploaded successfully. Now calculating HMPI...`;
+            statusMessage.textContent = `${uploadData.rows} rows of data uploaded successfully.`;
 
             showSpinner('Calculating HMPI...');
             const calculateResponse = await fetch('/calculate', {

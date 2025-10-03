@@ -134,11 +134,13 @@ def generate_report_route():
 
     df = pd.read_pickle(session['df_cache'])
     report_data = request.get_json()
+
     # --- Start of Fix ---
     # Pass the path to the static folder to the report generator
     static_folder_path = os.path.join(app.root_path, 'frontend', 'static')
     pdf_bytes = reporter.generate_report(df, report_data, static_folder_path)
     # --- End of Fix ---
+
     return Response(
         pdf_bytes,
         mimetype='application/pdf',
