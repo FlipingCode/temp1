@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const spinnertext = document.getElementById('spinner-text');
     const resetBtn = document.getElementById('reset-btn');
     const mapTabBtn = document.getElementById('map-tab-btn');
+    const generateReportBtn = document.getElementById('generate-report-btn'); // <-- New button
 
     let uploadedFile = null;
 
@@ -95,6 +96,57 @@ document.addEventListener('DOMContentLoaded', function () {
             hideSpinner();
         }
     });
+
+    // --- Start of Report Generation Logic ---
+    generateReportBtn.addEventListener('click', async () => {
+        showSpinner('Generating your report...');
+
+        const reportData = {
+            title: document.getElementById('report-title').value,
+            date: document.getElementById('report-date').value,
+            org: document.getElementById('report-org').value,
+            author: document.getElementById('report-author').value,
+            recommendations: document.getElementById('include-recs').checked,
+            sections: {
+                exec: document.getElementById('section-exec').checked,
+                results: document.getElementById('section-results').checked,
+                quality: document.getElementById('section-quality').checked,
+                conc: document.getElementById('section-conc').checked
+            }
+        };
+
+        try {
+            const response = await fetch('/report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reportData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Report generation failed.');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'hmpi_report.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error('Report Error:', error);
+            alert('Failed to generate report.');
+        } finally {
+            hideSpinner();
+        }
+    });
+    // --- End of Report Generation Logic ---
+
 
     function displayResults(data) {
         const {
@@ -198,3 +250,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
+// --- Start of Scroll Animation Logic ---
+// Select all elements you want to animate on scroll
+const animatedElements = document.querySelectorAll('.info-card');
+
+// Set up the Intersection Observer
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        // If the element is in the viewport, add the 'visible' class
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, {
+    threshold: 0.1 // Trigger when 10% of the element is visible
+});
+
+// Tell the observer to watch each of the selected elements
+animatedElements.forEach(el => observer.observe(el));
+// --- End of Scroll Animation Logic ---

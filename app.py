@@ -1,13 +1,14 @@
 print("Script started")
 import os
 import pandas as pd
-from flask import Flask, request, jsonify, render_template, session, redirect, url_for 
+from flask import Flask, request, jsonify, render_template, session, redirect, url_for, Response 
 
 from backend.features.data_processing import DataProcessor
 from backend.features.hmpi_calculation import  HMPICalculation
 from backend.features.basic_output import HMPIOutput
 from backend.features.better_df import PrettyColumns
 from backend.features.geospatial_analysis import GeoSpatialAnalyser
+from backend.features.report_generation import ReportGenerator
 from werkzeug.utils import secure_filename
 
 app = Flask(
@@ -26,7 +27,7 @@ calculator = HMPICalculation()
 outputter = HMPIOutput()
 format = PrettyColumns()
 geospatial = GeoSpatialAnalyser()
-
+reporter = ReportGenerator()
     
 # Home Page
 @app.route('/')
@@ -61,8 +62,11 @@ def upload_file():
     df=processor.load(filepath) 
     print("Data Loaded Successfully")
 
+    # --- Start of Fix ---
+    # Save the raw dataframe for calculation, but we will save the formatted one later
     df.to_pickle(os.path.join('data', 'uploads', 'df_cache.pkl'))
     session['df_cache'] = os.path.join('data', 'uploads', 'df_cache.pkl')
+    # --- End of Fix ---
 
     # Saving filepath in session 
     session['uploaded_file'] = filepath
@@ -87,17 +91,18 @@ def calculate_hmpi():
     # Calculating HMPI
     print("Running Calculation Module")
     df = calculator.calculate(df)
-    print(df)
-    df.to_pickle(session['df_cache'])
-
-    df2 = format.prettify(df)
-    print("It Works")
+    df_pretty = format.prettify(df.copy()) # Prettify a copy for display
+    
+    # --- Start of Fix ---
+    # Save the prettified dataframe so the report has the correct columns
+    df_pretty.to_pickle(session['df_cache']) 
+    # --- End of Fix ---
 
     return jsonify({
         'message': 'HMPI calculated successfully!',
-        'rows': len(df2),
-        'columns': list(df2.columns),
-        'preview': df2.head(30).to_dict(orient='records')
+        'rows': len(df_pretty),
+        'columns': list(df_pretty.columns),
+        'preview': df_pretty.head(30).to_dict(orient='records')
         })
 
 # Generate Map
@@ -109,22 +114,39 @@ def generate_map():
     
     df = pd.read_pickle(session['df_cache'])
 
+    # The dataframe from pickle is now the prettified one, so we check for 'HMPI'
     if 'HMPI' not in df.columns:
-        # Optionally auto-calculate
-        df = calculator.calculate(df)
-        df.to_pickle(session['df_cache'])
-        print("HMPI column calculated automatically.")
+        return "HMPI column not found, please re-analyze your data.", 400
 
     print("Running Geospatial Analysis Module")
-    if processor.coordinates_check(df):
+    # The data processor will find 'Latitude' and 'Longitude' even if they are named differently
+    if 'Latitude' in df.columns and 'Longitude' in df.columns:
         map_html = geospatial.geospatial_analysis(df)
-        # Instead of saving a full HTML file, return just the map <div> as string
         return map_html
     else:
         return "No coordinates found in data.", 400
 
+# Generate Report
+@app.route('/report', methods=['POST'])
+def generate_report_route():
+    if 'df_cache' not in session:
+        return "No data available to generate a report.", 400
+
+    df = pd.read_pickle(session['df_cache'])
+    report_data = request.get_json()
+    # --- Start of Fix ---
+    # Pass the path to the static folder to the report generator
+    static_folder_path = os.path.join(app.root_path, 'frontend', 'static')
+    pdf_bytes = reporter.generate_report(df, report_data, static_folder_path)
+    # --- End of Fix ---
+    return Response(
+        pdf_bytes,
+        mimetype='application/pdf',
+        headers={'Content-Disposition': 'attachment;filename=hmpi_report.pdf'}
+    )
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
  # On Windows: venv\Scripts\activate
  # python app.py
