@@ -77,5 +77,5 @@ class HMPICalculation:
 
         df['HMPI'] = hmpi_list
         df['Pollution Level'] = poll_list
-        df['Pollution_Color'] = poll_color_list
+        
         return df
